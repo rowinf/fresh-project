@@ -5,7 +5,7 @@ export interface Profile {
   lastName?: string;
   email?: string;
 }
-export interface PreviewItem {
+export interface DevItem {
   // Non-empty in API request and response
   id?: string;
 

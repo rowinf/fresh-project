@@ -1,11 +1,11 @@
 
-interface PreviewProps {
+interface ProfileProps {
   firstName?: string;
   lastName?: string;
   email?: string;
 }
 
-export default (props: PreviewProps) => {
+export default (props: ProfileProps) => {
   return (
     <div id="preview" class="sample-transition">
       <div id="preview-content" class="rounded border border-gray-600 h-60 min-w-48 slide-it">

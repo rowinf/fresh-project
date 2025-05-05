@@ -12,7 +12,7 @@ export default (props: ProfileFormProps) => {
     <form
       class="flex flex-col gap-2 items-start"
       method="POST"
-      action="/preview"
+      action="/dev"
       {...rest}
     >
       <label class="input">

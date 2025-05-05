@@ -1,6 +1,6 @@
 
 import ProfileForm from "../components/ProfileForm.tsx";
-import Preview from "../components/Preview.tsx";
+import Preview from "../components/Profile.tsx";
 
 export default function Home() {
   return (

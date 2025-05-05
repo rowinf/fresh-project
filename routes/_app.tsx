@@ -15,9 +15,6 @@ export default function App({ Component }: PageProps) {
           sizes="32x32"
         />
         <link rel="stylesheet" href="/styles.css" />
-
-
-
       </head>
       <body>
         <nav class="w-full flex justify-between items-center mb-8">

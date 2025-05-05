@@ -49,6 +49,7 @@ export default function PreviewById(props: PreviewProps) {
             hx-put={`/preview/${data.id}`}
             hx-target="#preview"
             hx-select="#preview"
+            hx-swap="outerHTML transition:true"
           />
         </div>
       </div>

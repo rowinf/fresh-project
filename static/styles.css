@@ -1,3 +1,7 @@
 
 @import "tailwindcss";
 @plugin "daisyui";
+
+:root {
+  --font-sans: 'InstrumentSans', sans-serif;
+}

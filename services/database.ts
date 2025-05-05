@@ -1,11 +1,11 @@
-import { PreviewItem, Profile } from "../shared/api.ts";
+import { PreviewItem } from "../shared/api.ts";
 import { ulid } from "@std/ulid";
 import { mapValues } from "@std/collections";
 import { z } from "zod";
 
 export const db = await Deno.openKv();
 export const profileSchema = z.object({
-  firstName: z.string().nullable(),
+  firstName: z.string().length(3, "too long").nullable(),
   lastName: z.string().nullable(),
   email: z.string().nullable(),
 });
@@ -14,11 +14,6 @@ export const inputSchema = z.object({
   profile: profileSchema,
 });
 export type InputSchema = z.infer<typeof inputSchema>;
-
-export const dbProfile = z.object({
-  id: z.string(),
-  data: profileSchema,
-});
 
 export async function loadPreviewItem(
   id: string,
@@ -39,19 +34,16 @@ export async function loadPreviewItem(
 export async function writePreviewItem(
   inputs: InputSchema,
 ): Promise<[Error | null, PreviewItem]> {
-  if (!inputs.id) {
-    inputs.id = ulid();
-  }
-
-  const op = db.atomic();
-
   const item: PreviewItem = {
-    id: inputs.id,
+    id: inputs.id ?? ulid(),
     profile: mapValues(inputs.profile, (val) => val ?? ""),
   };
-  op.set(["preview", inputs.id], item);
-  const {ok} = await op.commit();
-  if (ok){
+  const key = ["preview", String(item.id)];
+
+  const res = await db.atomic()
+    .set(key, item)
+    .commit();
+  if (res.ok) {
     return [null, item];
   }
   return [new Error("save failed"), item];

@@ -1,6 +1,6 @@
 
-import ProfileForm from "../islands/ProfileForm.tsx";
-import Preview from "../islands/Preview.tsx";
+import ProfileForm from "../components/ProfileForm.tsx";
+import Preview from "../components/Preview.tsx";
 
 export default function Home() {
   return (

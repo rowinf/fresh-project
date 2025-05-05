@@ -7,7 +7,7 @@ interface PreviewProps {
 
 export default (props: PreviewProps) => {
   return (
-    <div>
+    <div id="preview">
       <div class="rounded border border-gray-600 h-60 min-w-48">
         <div>{props.firstName}</div>
         <div>{props.lastName}</div>

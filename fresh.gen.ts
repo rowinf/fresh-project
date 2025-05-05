@@ -11,8 +11,6 @@ import * as $preview from "./routes/preview.ts";
 import * as $preview_previewId_ from "./routes/preview/[previewId].tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Incrementer from "./islands/Incrementer.tsx";
-import * as $Preview from "./islands/Preview.tsx";
-import * as $ProfileForm from "./islands/ProfileForm.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -28,8 +26,6 @@ const manifest = {
   islands: {
     "./islands/Counter.tsx": $Counter,
     "./islands/Incrementer.tsx": $Incrementer,
-    "./islands/Preview.tsx": $Preview,
-    "./islands/ProfileForm.tsx": $ProfileForm,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

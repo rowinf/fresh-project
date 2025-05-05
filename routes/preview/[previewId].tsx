@@ -1,5 +1,5 @@
-import ProfileForm from "../../islands/ProfileForm.tsx";
-import Preview from "../../islands/Preview.tsx";
+import ProfileForm from "../../components/ProfileForm.tsx";
+import Preview from "../../components/Preview.tsx";
 import { Handlers } from "$fresh/server.ts";
 import { PreviewItem } from "../../shared/api.ts";
 import { loadPreviewItem, writePreviewItem } from "../../services/database.ts";
@@ -13,6 +13,23 @@ export const handler: Handlers = {
       return ctx.renderNotFound();
     }
     return ctx.render(preview);
+  },
+  async PUT(req, ctx) {
+    const { previewId } = ctx.params;
+    const form = await req.formData();
+    const [err, preview] = await writePreviewItem({
+      id: previewId,
+      profile: {
+        firstName: form.get("firstName")?.toString() ?? "",
+        lastName: form.get("lastName")?.toString() ?? "",
+        email: form.get("email")?.toString() ?? "",
+      },
+    });
+    if (err) {
+      return Response.error();
+    } else {
+      return ctx.render(preview);
+    }
   },
 };
 
@@ -29,6 +46,9 @@ export default function PreviewById(props: PreviewProps) {
         <div class="min-w-48">
           <ProfileForm
             {...pick(data.profile!, ["firstName", "lastName", "email"])}
+            hx-put={`/preview/${data.id}`}
+            hx-target="#preview"
+            hx-select="#preview"
           />
         </div>
       </div>

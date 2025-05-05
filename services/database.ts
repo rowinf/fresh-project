@@ -1,67 +1,58 @@
 import { PreviewItem, Profile } from "../shared/api.ts";
-
+import { ulid } from "@std/ulid";
+import { mapValues } from "@std/collections";
 import { z } from "zod";
 
 export const db = await Deno.openKv();
-export const inputSchema = z.array(z.object({
-  id: z.string(),
-  profile: z.object({
-    firstName: z.string().nullable(),
-    lastName: z.string().nullable(),
-    email: z.string().nullable(),
-  }),
-}));
+export const profileSchema = z.object({
+  firstName: z.string().nullable(),
+  lastName: z.string().nullable(),
+  email: z.string().nullable(),
+});
+export const inputSchema = z.object({
+  id: z.string().nullable(),
+  profile: profileSchema,
+});
 export type InputSchema = z.infer<typeof inputSchema>;
+
+export const dbProfile = z.object({
+  id: z.string(),
+  data: profileSchema,
+});
 
 export async function loadPreviewItem(
   id: string,
-  consistency: "strong" | "eventual",
-): Promise<Profile> {
-  const out: PreviewItem = {
-    id,
-    profile: {},
-  };
+  consistency: "strong" | "eventual" = "strong",
+): Promise<[Error | null, PreviewItem | null]> {
+  let out: PreviewItem | null = null;
+  let err: Error | null = null;
 
-  const it = db.get( ["profile", id] , {
+  const preview = await db.get<PreviewItem>(["preview", id], {
     consistency,
   });
-  for await (const entry of it) {
-    const item = entry.value as PreviewItem;
-    item.id = entry.key[entry.key.length - 1] as string;
-    item.versionstamp = entry.versionstamp!;
-    out.items.push(item);
-  }
+  if (preview.value === null) err = new Error("not found");
+  else out = preview.value;
 
-  return out;
+  return [err, out];
 }
 
-export async function writeItems(
-  listId: string,
+export async function writePreviewItem(
   inputs: InputSchema,
-): Promise<void> {
-  const currentEntries = await db.getMany(
-    inputs.map((input) => ["list", listId, input.id]),
-  );
+): Promise<[Error | null, PreviewItem]> {
+  if (!inputs.id) {
+    inputs.id = ulid();
+  }
 
   const op = db.atomic();
 
-  inputs.forEach((input, i) => {
-    if (input.text === null) {
-      op.delete(["list", listId, input.id]);
-    } else {
-      const current = currentEntries[i].value as TodoListItem | null;
-      const now = Date.now();
-      const createdAt = current?.createdAt ?? now;
-
-      const item: TodoListItem = {
-        text: input.text,
-        completed: input.completed,
-        createdAt,
-        updatedAt: now,
-      };
-      op.set(["list", listId, input.id], item);
-    }
-  });
-  op.set(["list_updated", listId], true);
-  await op.commit();
+  const item: PreviewItem = {
+    id: inputs.id,
+    profile: mapValues(inputs.profile, (val) => val ?? ""),
+  };
+  op.set(["preview", inputs.id], item);
+  const {ok} = await op.commit();
+  if (ok){
+    return [null, item];
+  }
+  return [new Error("save failed"), item];
 }

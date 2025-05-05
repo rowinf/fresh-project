@@ -11,5 +11,5 @@ export interface PreviewItem {
 
   // Non-empty in API response
   versionstamp?: string;
-  profile: Profile;
+  profile: Profile | null;
 }

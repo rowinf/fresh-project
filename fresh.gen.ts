@@ -9,6 +9,7 @@ import * as $dev from "./routes/dev.ts";
 import * as $dev_devId_ from "./routes/dev/[devId].tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $previewtest from "./routes/previewtest.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Incrementer from "./islands/Incrementer.tsx";
 import type { Manifest } from "$fresh/server.ts";
@@ -22,6 +23,7 @@ const manifest = {
     "./routes/dev/[devId].tsx": $dev_devId_,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
+    "./routes/previewtest.tsx": $previewtest,
   },
   islands: {
     "./islands/Counter.tsx": $Counter,

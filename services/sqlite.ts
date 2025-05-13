@@ -64,8 +64,8 @@ const developerDBSchema = z.object({
 
 export type DeveloperSchema = z.infer<typeof developerInputSchema>;
 
-export function loadDeveloperItem(
-  id: number,
+export function loadDevItem(
+  id: string,
 ): [Error | null, DeveloperSchema | null] {
   let out: DeveloperSchema | null = null;
   let err: Error | null = null;
@@ -88,8 +88,8 @@ export function loadDeveloperItem(
   return [err, out];
 }
 
-export function writeDeveloperItem(
-  id: number | null,
+export function writeDevItem(
+  id: string | null,
   inputs: DeveloperSchema,
 ): [Error | null, DeveloperSchema] {
   const itemDBSchema = developerInputSchema.safeParse(inputs);

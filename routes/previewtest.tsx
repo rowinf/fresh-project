@@ -1,12 +1,12 @@
-import { DeveloperSchema, writeDeveloperItem } from "../services/sqlite.ts";
+import { DeveloperSchema, writeDevItem } from "../services/sqlite.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import Preview from "../islands/Preview.tsx";
-import ProfileForm from "../islands/ProfileForm.tsx";
+import Preview from "../components/Profile.tsx";
+import ProfileForm from "../components/ProfileForm.tsx";
 
 export const handler: Handlers = {
   async POST(req, ctx) {
     const form = await req.formData();
-    const [err, dev] = writeDeveloperItem(null, {
+    const [err, dev] = writeDevItem(null, {
       firstName: form.get("firstName")?.toString() ?? "",
       lastName: form.get("lastName")?.toString() ?? "",
       email: form.get("email")?.toString() ?? "",
@@ -17,7 +17,7 @@ export const handler: Handlers = {
       // error redirect
       return ctx.render({error: err});
     } else {
-      return Response.redirect(new URL(`/preview/${dev.id}`, req.url));
+      return Response.redirect(new URL(`/dev/${dev.id}`, req.url));
     }
   },
 };

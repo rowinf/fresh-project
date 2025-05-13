@@ -1,6 +1,7 @@
 
 
-export interface Profile {
+export interface ProfileRecord {
+  id?: number;
   firstName?: string;
   lastName?: string;
   email?: string;
